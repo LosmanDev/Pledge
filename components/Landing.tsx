@@ -44,7 +44,7 @@ export default function Landing() {
 
   return (
     <section>
-      <div className="relative w-full max-w-full mx-auto h-96 overflow-hidden rounded-b-badge mb-5">
+      <div className="relative w-full max-w-full mx-auto h-96 overflow-hidden rounded-b-lg mb-5">
         {images.map((src, index) => (
           <div
             key={src}
@@ -111,6 +111,9 @@ export default function Landing() {
           </svg>
           <input type="text" className="grow" placeholder="Email" />
         </label>
+        <button className="btn btn-bordered w-full max-w-xs mt-5">
+          Submit
+        </button>
       </form>
     </section>
   );
