@@ -28,11 +28,11 @@ export default function Landing() {
 
     const countInterval = setInterval(() => {
       setCount((prevCount) => {
-        if (prevCount < 1000) {
+        if (prevCount < 1234) {
           return prevCount + 1;
         }
         clearInterval(countInterval);
-        return 1000;
+        return 1234;
       });
     }, 5); // Adjust this value to change the speed of counting
 
@@ -43,7 +43,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <section>
+    <section className="mb-20 mx-auto">
       <div className="relative w-full max-w-full mx-auto h-96 overflow-hidden rounded-b-lg mb-5">
         {images.map((src, index) => (
           <div
@@ -63,43 +63,74 @@ export default function Landing() {
         ))}
 
         <div className="bg-black/[0.5] pt-20 absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 ">
-          <h1 className="text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#ffff] to-[#757272]">
+          <h1
+            data-aos="fade-right"
+            data-aos-delay="0"
+            className="text-7xl font-bold mb-10 bg-clip-text text-transparent bg-gradient-to-r from-[#ffff] to-[#757272]"
+          >
             {formatNumberWithCommas(count)}
           </h1>
-          <h2 className="sm:text-3xl text-xl font-semibold mb-4">
+          <h2
+            data-aos="fade-right"
+            data-aos-delay="200"
+            className="sm:text-3xl text-xl font-semibold mb-4"
+          >
             Pledges have been made!
           </h2>
 
-          <p className="sm:text-2xl text-lg sm:px-0 px-4">
+          <p
+            data-aos="fade-right"
+            data-aos-delay="400"
+            className="sm:text-2xl text-lg sm:px-0 px-4"
+          >
             Enter your region and email below to make a pledge.
           </p>
         </div>
       </div>
-      <form className="flex flex-col justify-center items-center sm:mt-10 mt-20">
-        <select className="select select-bordered w-full max-w-xs mb-5">
-          <option disabled selected>
-            Select Region
+
+      <blockquote
+        data-aos="fade-right"
+        data-aos-delay="600"
+        className="text-center font-light text-neutral-500 sm:text-2xl text-xl"
+      >
+        "Your voice matters. Pledge your region and be part of Somalia's
+        future."
+      </blockquote>
+      <form className="flex flex-col justify-center items-center sm:mt-10 mt-10">
+        <select
+          data-aos="fade-right"
+          data-aos-delay="800"
+          className="select select-bordered w-full max-w-xs mb-5"
+        >
+          <option value="Select Region">Select Region</option>
+          <option value="Awdal (Borama)">Awdal (Borama)</option>
+          <option value="Bakool (Hudur)">Bakool (Hudur)</option>
+          <option value="Banadir (Mogadishu)">Banadir (Mogadishu)</option>
+          <option value="Bari (Bosaso)">Bari (Bosaso)</option>
+          <option value="Bay (Baidoa)">Bay (Baidoa)</option>
+          <option value="Galgaduud (Dhusamareb)">Galgaduud (Dhusamareb)</option>
+          <option value="Gedo (Garbahaarreey)">Gedo (Garbahaarreey)</option>
+          <option value="Hiiraan (Beledweyn)">Hiiraan (Beledweyn)</option>
+          <option value="Lower Juba (Kismayo)">Lower Juba (Kismayo)</option>
+          <option value="Lower Shabelle (Merca)">Lower Shabelle (Merca)</option>
+          <option value="Middle Juba (Bu'ale)">Middle Juba (Bu'ale)</option>
+          <option value="Middle Shebelle (Jowhar)">
+            Middle Shebelle (Jowhar)
           </option>
-          <option>Awdal (Borama)</option>
-          <option>Bakool (Hudur)</option>
-          <option>Banadir (Mogadishu)</option>
-          <option>Bari (Bosaso)</option>
-          <option>Bay (Baidoa)</option>
-          <option>Galgaduud (Dhusamareb)</option>
-          <option>Gedo (Garbahaarreey)</option>
-          <option>Hiiraan (Beledweyn)</option>
-          <option>Lower Juba (Kismayo)</option>
-          <option>Lower Shabelle (Merca)</option>
-          <option>Middle Juba (Bu'ale)</option>
-          <option>Middle Shebelle (Jowhar)</option>
-          <option>Mudug (Galkayo)</option>
-          <option>Nugal (Garowe)</option>
-          <option>Sanaag (Erigavo)</option>
-          <option>Sool (Las Anod)</option>
-          <option>Togdheer (Burao)</option>
-          <option>Woqooyi Galbeed (Hargeisa)</option>
+          <option value="Mudug (Galkayo)">Mudug (Galkayo)</option>
+          <option value="Nugal (Garowe)">Nugal (Garowe)</option>
+          <option value="Sanaag (Erigavo)">Sanaag (Erigavo)</option>
+          <option value="Sool (Las Anod)">Sool (Las Anod)</option>
+          <option value="Togdheer (Burao)">Togdheer (Burao)</option>
+          <option value="Woqooyi Galbeed (Hargeisa)">
+            Woqooyi Galbeed (Hargeisa)
+          </option>
         </select>
-        <label className="input input-bordered flex items-center gap-2 w-full max-w-xs">
+        <label
+          data-aos="fade-right"
+          data-aos-delay="1000"
+          className="input input-bordered flex items-center gap-2 w-full max-w-xs"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -111,7 +142,11 @@ export default function Landing() {
           </svg>
           <input type="text" className="grow" placeholder="Email" />
         </label>
-        <button className="btn btn-bordered w-full max-w-xs mt-5">
+        <button
+          data-aos="fade-right"
+          data-aos-delay="1200"
+          className="btn btn-bordered w-full max-w-xs mt-5"
+        >
           Submit
         </button>
       </form>
