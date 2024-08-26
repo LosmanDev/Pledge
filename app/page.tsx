@@ -15,8 +15,10 @@ export default function Home() {
     });
   }, []);
   return (
-    <main>
-      <Landing />
+    <main className="min-h-screen flex flex-col">
+      <div className="flex-grow">
+        <Landing />
+      </div>
       <Footer />
     </main>
   );

@@ -43,7 +43,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <section className="mb-20 mx-auto">
+    <section className="mb-20">
       <div className="relative w-full max-w-full mx-auto h-96 overflow-hidden rounded-b-lg mb-5">
         {images.map((src, index) => (
           <div
@@ -62,7 +62,7 @@ export default function Landing() {
           </div>
         ))}
 
-        <div className="bg-black/[0.5] pt-20 absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 ">
+        <div className="bg-black/[0.5] sm:pt-20  pt-10 absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 ">
           <h1
             data-aos="fade-right"
             data-aos-delay="0"
@@ -72,7 +72,7 @@ export default function Landing() {
           </h1>
           <h2
             data-aos="fade-right"
-            data-aos-delay="200"
+            data-aos-delay="400"
             className="sm:text-3xl text-xl font-semibold mb-4"
           >
             Pledges have been made!
@@ -80,7 +80,7 @@ export default function Landing() {
 
           <p
             data-aos="fade-right"
-            data-aos-delay="400"
+            data-aos-delay="800"
             className="sm:text-2xl text-lg sm:px-0 px-4"
           >
             Enter your region and email below to make a pledge.
@@ -90,8 +90,8 @@ export default function Landing() {
 
       <blockquote
         data-aos="fade-right"
-        data-aos-delay="600"
-        className="text-center font-light text-neutral-500 sm:text-2xl text-xl"
+        data-aos-delay="1200"
+        className="text-center font-light text-neutral-500 sm:text-2xl text-base px-4"
       >
         "Your voice matters. Pledge your region and be part of Somalia's
         future."
@@ -99,7 +99,7 @@ export default function Landing() {
       <form className="flex flex-col justify-center items-center sm:mt-10 mt-10">
         <select
           data-aos="fade-right"
-          data-aos-delay="800"
+          data-aos-delay="1800"
           className="select select-bordered w-full max-w-xs mb-5"
         >
           <option value="Select Region">Select Region</option>
@@ -128,7 +128,7 @@ export default function Landing() {
         </select>
         <label
           data-aos="fade-right"
-          data-aos-delay="1000"
+          data-aos-delay="2000"
           className="input input-bordered flex items-center gap-2 w-full max-w-xs"
         >
           <svg
@@ -144,7 +144,7 @@ export default function Landing() {
         </label>
         <button
           data-aos="fade-right"
-          data-aos-delay="1200"
+          data-aos-delay="2200"
           className="btn btn-bordered w-full max-w-xs mt-5"
         >
           Submit
