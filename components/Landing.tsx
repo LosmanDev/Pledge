@@ -96,12 +96,12 @@ export default function Landing() {
         "Your voice matters. Pledge your region and be part of Somalia's
         future."
       </blockquote>
-      <form className="flex flex-col justify-center items-center sm:mt-10 mt-10">
-        <select
-          data-aos="fade-right"
-          data-aos-delay="1800"
-          className="select select-bordered w-full max-w-xs mb-5"
-        >
+      <form
+        data-aos="fade-right"
+        data-aos-delay="1600"
+        className="flex flex-col justify-center items-center sm:mt-10 mt-10"
+      >
+        <select className="select select-bordered w-full max-w-xs mb-5">
           <option value="Select Region">Select Region</option>
           <option value="Awdal (Borama)">Awdal (Borama)</option>
           <option value="Bakool (Hudur)">Bakool (Hudur)</option>
@@ -126,11 +126,7 @@ export default function Landing() {
             Woqooyi Galbeed (Hargeisa)
           </option>
         </select>
-        <label
-          data-aos="fade-right"
-          data-aos-delay="2000"
-          className="input input-bordered flex items-center gap-2 w-full max-w-xs"
-        >
+        <label className="input input-bordered flex items-center gap-2 w-full max-w-xs">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -142,11 +138,7 @@ export default function Landing() {
           </svg>
           <input type="text" className="grow" placeholder="Email" />
         </label>
-        <button
-          data-aos="fade-right"
-          data-aos-delay="2200"
-          className="btn btn-bordered w-full max-w-xs mt-5"
-        >
+        <button className="btn btn-bordered w-full max-w-xs mt-5">
           Submit
         </button>
       </form>

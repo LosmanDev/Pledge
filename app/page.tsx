@@ -10,7 +10,7 @@ export default function Home() {
     AOS.init({
       duration: 1500,
       once: true,
-      mirror: true,
+      mirror: false,
       easing: 'ease-out-cubic',
     });
   }, []);
