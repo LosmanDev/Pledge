@@ -93,11 +93,10 @@ export default function Landing() {
         data-aos-delay="1200"
         className="text-center font-light text-neutral-500 sm:text-2xl text-base px-4"
       >
-        "Your voice matters. Pledge your region and be part of Somalia's
-        future."
+        "Your voice matters. Be a part of Somalia's future."
       </blockquote>
       <form
-        data-aos="fade-right"
+        data-aos="fade"
         data-aos-delay="1600"
         className="flex flex-col justify-center items-center sm:mt-10 mt-10"
       >
@@ -138,9 +137,7 @@ export default function Landing() {
           </svg>
           <input type="text" className="grow" placeholder="Email" />
         </label>
-        <button className="btn btn-bordered w-full max-w-xs mt-5">
-          Submit
-        </button>
+        <button className="btn btn-outline w-full max-w-xs mt-5">Submit</button>
       </form>
     </section>
   );
