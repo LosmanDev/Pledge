@@ -24,7 +24,7 @@ export default function Landing() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000);
+    }, 4000);
 
     const countInterval = setInterval(() => {
       setCount((prevCount) => {
@@ -34,7 +34,7 @@ export default function Landing() {
         clearInterval(countInterval);
         return 1234;
       });
-    }, 5); // Adjust this value to change the speed of counting
+    }, 4); // Adjust this value to change the speed of counting
 
     return () => {
       clearInterval(interval);
