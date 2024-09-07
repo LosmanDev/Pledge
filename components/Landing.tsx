@@ -24,43 +24,72 @@ const regions = [
   { name: 'Somaliland', image: '/photos/assets/somaliland.webp' },
 ];
 
-interface Region {
-  name: string;
-  image: string;
-}
-
-const CustomOption: React.FC<{ region: Region }> = ({ region }) => (
-  <div className="flex items-center gap-2">
-    <Image src={region.image} alt={region.name} width={20} height={20} />
-    <span>{region.name}</span>
-  </div>
-);
-
 export default function Landing() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [count, setCount] = useState(500);
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [firstName, setfirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [age, setAge] = useState('');
   const [selectedRegion, setSelectedRegion] = useState(regions[0]);
+  const [regionError, setRegionError] = useState('');
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [ageError, setAgeError] = useState('');
+  const [emailError, setEmailError] = useState('');
 
-  const nameRegex = /^[A-Za-z]{4,}$/;
-  const lastNameRegex = /^[A-Za-z]{4,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const firstNameRegex = /^[A-Za-z]{3,}$/;
+  const lastNameRegex = /^[A-Za-z]{3,}$/;
   const ageRegex = /^\d+$/;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nameRegex.test(name)) {
-      alert('First name must be more than 4 characters.');
-      return;
+    let isValid = true;
+
+    if (selectedRegion.name === 'Select Region') {
+      setRegionError('Please select a region.');
+      isValid = false;
+    } else {
+      setRegionError('');
     }
+
+    if (!firstNameRegex.test(firstName)) {
+      setFirstNameError('First name must be more than 4 characters.');
+      isValid = false;
+    } else {
+      setFirstNameError('');
+    }
+
     if (!lastNameRegex.test(lastName)) {
-      alert('Last name must be more than 4 characters.');
-      return;
+      setLastNameError('Last name must be more than 4 characters.');
+      isValid = false;
+    } else {
+      setLastNameError('');
     }
+
     if (!ageRegex.test(age)) {
-      alert('Age must be a number.');
-      return;
+      setAgeError('Age must be a number.');
+      isValid = false;
+    } else {
+      setAgeError('');
+    }
+
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address.');
+      isValid = false;
+    } else {
+      setEmailError('');
+    }
+
+    if (isValid) {
+      console.log('Form submitted:', {
+        email,
+        firstName,
+        lastName,
+        age,
+        selectedRegion,
+      });
     }
   };
 
@@ -161,11 +190,12 @@ export default function Landing() {
           <select
             className="select select-bordered w-full max-w-xs font-bold appearance-none"
             value={selectedRegion.name}
-            onChange={(e) =>
+            onChange={(e) => {
               setSelectedRegion(
                 regions.find((r) => r.name === e.target.value) || regions[0],
-              )
-            }
+              );
+              setRegionError('');
+            }}
           >
             {regions.map((region) => (
               <option key={region.name} value={region.name}>
@@ -173,38 +203,78 @@ export default function Landing() {
               </option>
             ))}
           </select>
+          {regionError && (
+            <span className="text-red-500 text-sm mt-1">{regionError}</span>
+          )}
         </div>
 
-        <input
-          type="text"
-          className="input input-bordered flex items-center gap-2 w-full max-w-xs mb-5"
-          placeholder="Email"
-        />
+        <div className="w-full max-w-xs mb-5">
+          <input
+            type="email"
+            className="input input-bordered flex items-center gap-2 w-full"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setEmailError('');
+            }}
+            required
+          />
+          {emailError && (
+            <span className="text-red-500 text-sm mt-1">{emailError}</span>
+          )}
+        </div>
+        <div className="w-full max-w-xs mb-5">
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => {
+              setfirstName(e.target.value);
+              setFirstNameError('');
+            }}
+            required
+          />
+          {firstNameError && (
+            <span className="text-red-500 text-sm mt-1">{firstNameError}</span>
+          )}
+        </div>
 
-        <input
-          type="text"
-          className="input input-bordered w-full max-w-xs mb-5"
-          placeholder="First Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          className="input input-bordered w-full max-w-xs mb-5"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          className="input input-bordered w-full max-w-xs mb-5"
-          placeholder="Age"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          required
-        />
+        <div className="w-full max-w-xs mb-5">
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              setLastNameError('');
+            }}
+            required
+          />
+          {lastNameError && (
+            <span className="text-red-500 text-sm mt-1">{lastNameError}</span>
+          )}
+        </div>
+
+        <div className="w-full max-w-xs mb-5">
+          <input
+            type="number"
+            className="input input-bordered w-full"
+            placeholder="Age"
+            value={age}
+            onChange={(e) => {
+              setAge(e.target.value);
+              setAgeError('');
+            }}
+            required
+          />
+          {ageError && (
+            <span className="text-red-500 text-sm mt-1">{ageError}</span>
+          )}
+        </div>
+
         <button className="btn btn-outline w-full max-w-xs mt-5">Submit</button>
       </form>
     </section>
