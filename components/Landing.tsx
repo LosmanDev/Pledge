@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import mailAnimation from '@/public/photos/mail.gif';
 
 const images = [
   '/photos/baby.webp',
@@ -27,6 +28,8 @@ const regions = [
 export default function Landing() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [count, setCount] = useState(500);
+  const [dbCount, setDbCount] = useState(0);
+  const [isCountingFinished, setIsCountingFinished] = useState(false);
   const [email, setEmail] = useState('');
   const [firstName, setfirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -37,13 +40,43 @@ export default function Landing() {
   const [lastNameError, setLastNameError] = useState('');
   const [ageError, setAgeError] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const firstNameRegex = /^[A-Za-z]{3,}$/;
-  const lastNameRegex = /^[A-Za-z]{3,}$/;
+  const nameRegex = /^[A-Za-zÀ-ÿ\s'-]{3,}$/;
   const ageRegex = /^\d+$/;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const firstNameRegex = nameRegex;
+  const lastNameRegex = nameRegex;
+
+  useEffect(() => {
+    fetch('/api/submit-pledge')
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setDbCount(data.totalPledges);
+        }
+      })
+      .catch((error) => console.error('Error fetching initial count:', error));
+
+    const countInterval = setInterval(() => {
+      setCount((prevCount) => {
+        if (prevCount < 1234) {
+          return prevCount + 1;
+        }
+        clearInterval(countInterval);
+        setIsCountingFinished(true);
+        return 1234;
+      });
+    }, 4); // Adjust this value to change the speed of counting
+
+    return () => {
+      clearInterval(countInterval);
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let isValid = true;
 
@@ -55,14 +88,14 @@ export default function Landing() {
     }
 
     if (!firstNameRegex.test(firstName)) {
-      setFirstNameError('First name must be more than 4 characters.');
+      setFirstNameError('First name must be more than 3 characters.');
       isValid = false;
     } else {
       setFirstNameError('');
     }
 
     if (!lastNameRegex.test(lastName)) {
-      setLastNameError('Last name must be more than 4 characters.');
+      setLastNameError('Last name must be more than 3 characters.');
       isValid = false;
     } else {
       setLastNameError('');
@@ -83,15 +116,56 @@ export default function Landing() {
     }
 
     if (isValid) {
-      console.log('Form submitted:', {
-        email,
-        firstName,
-        lastName,
-        age,
-        selectedRegion,
-      });
+      try {
+        const response = await fetch('/api/submit-pledge', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            region: selectedRegion.name,
+            email: email,
+            first_name: firstName,
+            last_name: lastName,
+            age: parseInt(age, 10),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to submit pledge');
+        }
+
+        const result = await response.json();
+        console.log('Pledge submitted successfully:', result);
+
+        if (result.success && result.totalPledges) {
+          setDbCount(result.totalPledges);
+        }
+
+        setSelectedRegion(regions[0]);
+        setEmail('');
+        setfirstName('');
+        setLastName('');
+        setAge('');
+        setIsSubmitted(true);
+
+        // Show animation after 3 seconds
+        setTimeout(() => {
+          setShowAnimation(true);
+        }, 3000);
+
+        // Reload page after 6 seconds (3 seconds for thank you + 3 seconds for animation)
+        setTimeout(() => {
+          window.location.reload();
+        }, 4500);
+      } catch (error) {
+        console.error('Error submitting pledge:', error);
+        // Show error message to user
+      }
     }
   };
+
+  const displayCount = isCountingFinished ? 1234 + dbCount : count;
 
   const formatNumberWithCommas = (number: number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -120,7 +194,7 @@ export default function Landing() {
 
   return (
     <section className="mb-20">
-      <div className="relative w-full max-w-full mx-auto h-96 overflow-hidden rounded-b-lg mb-5">
+      <div className="relative w-full max-w-full mx-auto h-80 overflow-hidden rounded-b-lg mb-5">
         {images.map((src, index) => (
           <div
             key={src}
@@ -144,7 +218,7 @@ export default function Landing() {
             data-aos-delay="0"
             className="text-7xl font-bold mb-10 bg-clip-text text-transparent bg-gradient-to-r from-[#ffff] to-[#757272]"
           >
-            {formatNumberWithCommas(count)}
+            {formatNumberWithCommas(displayCount)}
           </h1>
           <h2
             data-aos="fade-right"
@@ -171,112 +245,134 @@ export default function Landing() {
       >
         "Your voice matters. Be a part of Somalia's future."
       </blockquote>
-      <form
-        onSubmit={handleSubmit}
-        data-aos="fade"
-        data-aos-delay="1600"
-        className="flex flex-col justify-center items-center sm:mt-10 mt-10"
-      >
-        <div className="flex items-center gap-2 mb-5">
-          <Image
-            src={selectedRegion.image}
-            alt={selectedRegion.name}
-            width={20}
-            height={20}
-          />
-          <span>{selectedRegion.name}</span>
-        </div>
-        <div className="relative w-full max-w-xs mb-5">
-          <select
-            className="select select-bordered w-full max-w-xs font-bold appearance-none"
-            value={selectedRegion.name}
-            onChange={(e) => {
-              setSelectedRegion(
-                regions.find((r) => r.name === e.target.value) || regions[0],
-              );
-              setRegionError('');
-            }}
-          >
-            {regions.map((region) => (
-              <option key={region.name} value={region.name}>
-                {region.name}
-              </option>
-            ))}
-          </select>
-          {regionError && (
-            <span className="text-red-500 text-sm mt-1">{regionError}</span>
-          )}
-        </div>
+      {!isSubmitted ? (
+        <form
+          onSubmit={handleSubmit}
+          data-aos="fade"
+          data-aos-delay="1600"
+          className="flex flex-col justify-center items-center sm:mt-10 mt-10"
+        >
+          <div className="flex items-center gap-2 mb-5">
+            <Image
+              src={selectedRegion.image}
+              alt={selectedRegion.name}
+              width={20}
+              height={20}
+            />
+            <span>{selectedRegion.name}</span>
+          </div>
+          <div className="relative w-full max-w-xs mb-5">
+            <select
+              className="select select-bordered w-full max-w-xs font-bold appearance-none"
+              value={selectedRegion.name}
+              onChange={(e) => {
+                setSelectedRegion(
+                  regions.find((r) => r.name === e.target.value) || regions[0],
+                );
+                setRegionError('');
+              }}
+            >
+              {regions.map((region) => (
+                <option key={region.name} value={region.name}>
+                  {region.name}
+                </option>
+              ))}
+            </select>
+            {regionError && (
+              <span className="text-red-500 text-sm mt-1">{regionError}</span>
+            )}
+          </div>
 
-        <div className="w-full max-w-xs mb-5">
-          <input
-            type="email"
-            className="input input-bordered flex items-center gap-2 w-full"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailError('');
-            }}
-            required
-          />
-          {emailError && (
-            <span className="text-red-500 text-sm mt-1">{emailError}</span>
-          )}
-        </div>
-        <div className="w-full max-w-xs mb-5">
-          <input
-            type="text"
-            className="input input-bordered w-full"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => {
-              setfirstName(e.target.value);
-              setFirstNameError('');
-            }}
-            required
-          />
-          {firstNameError && (
-            <span className="text-red-500 text-sm mt-1">{firstNameError}</span>
-          )}
-        </div>
+          <div className="w-full max-w-xs mb-5">
+            <input
+              type="email"
+              className="input input-bordered flex items-center gap-2 w-full"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError('');
+              }}
+              required
+            />
+            {emailError && (
+              <span className="text-red-500 text-sm mt-1">{emailError}</span>
+            )}
+          </div>
+          <div className="w-full max-w-xs mb-5">
+            <input
+              type="text"
+              className="input input-bordered w-full"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => {
+                setfirstName(e.target.value);
+                setFirstNameError('');
+              }}
+              required
+            />
+            {firstNameError && (
+              <span className="text-red-500 text-sm mt-1">
+                {firstNameError}
+              </span>
+            )}
+          </div>
 
-        <div className="w-full max-w-xs mb-5">
-          <input
-            type="text"
-            className="input input-bordered w-full"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => {
-              setLastName(e.target.value);
-              setLastNameError('');
-            }}
-            required
-          />
-          {lastNameError && (
-            <span className="text-red-500 text-sm mt-1">{lastNameError}</span>
+          <div className="w-full max-w-xs mb-5">
+            <input
+              type="text"
+              className="input input-bordered w-full"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                setLastNameError('');
+              }}
+              required
+            />
+            {lastNameError && (
+              <span className="text-red-500 text-sm mt-1">{lastNameError}</span>
+            )}
+          </div>
+
+          <div className="w-full max-w-xs mb-5">
+            <input
+              type="number"
+              className="input input-bordered w-full"
+              placeholder="Age"
+              value={age}
+              onChange={(e) => {
+                setAge(e.target.value);
+                setAgeError('');
+              }}
+              required
+            />
+            {ageError && (
+              <span className="text-red-500 text-sm mt-1">{ageError}</span>
+            )}
+          </div>
+
+          <button className="btn btn-outline w-full max-w-xs mt-5">
+            Submit
+          </button>
+        </form>
+      ) : (
+        <div className="text-center mt-10">
+          <h2 data-aos="fade" className="text-2xl mb-1">
+            Thank you for your submission!
+          </h2>
+          {showAnimation && (
+            <div data-aos="fade" className="flex justify-center">
+              <Image
+                src={mailAnimation}
+                alt="Mail sent animation"
+                width={250}
+                height={250}
+              />
+            </div>
           )}
         </div>
-
-        <div className="w-full max-w-xs mb-5">
-          <input
-            type="number"
-            className="input input-bordered w-full"
-            placeholder="Age"
-            value={age}
-            onChange={(e) => {
-              setAge(e.target.value);
-              setAgeError('');
-            }}
-            required
-          />
-          {ageError && (
-            <span className="text-red-500 text-sm mt-1">{ageError}</span>
-          )}
-        </div>
-
-        <button className="btn btn-outline w-full max-w-xs mt-5">Submit</button>
-      </form>
+      )}
     </section>
   );
 }

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { Raleway } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
-const raleway = Raleway({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Pledge your Region',
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`bg-slate-100 ${raleway.className}`}>{children}</body>
+      <body className={`bg-slate-100 ${inter.className}`}>{children}</body>
     </html>
   );
 }
